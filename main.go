@@ -1,27 +1,16 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"net/http"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/mkollmeyer/urlshortener-api/app"
 )
 
 func main() {
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
-	router.Get("/hello", handler)
-	server := &http.Server{
-		Addr:    ":3000",
-		Handler: router,
-	}
-	err := server.ListenAndServe()
+	app := app.New()
+	err := app.Start(context.TODO())
 	if err != nil {
-		fmt.Println("Connection failed", err)
+		fmt.Println("Failed to start: ", err)
 	}
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello, world!"))
 }
